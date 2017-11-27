@@ -12,16 +12,29 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('admin.dashboard');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('admin', 'Admin\AdminController@index');
-Route::resource('admin/roles', 'Admin\RolesController');
-Route::resource('admin/permissions', 'Admin\PermissionsController');
-Route::resource('admin/users', 'Admin\UsersController');
-Route::get('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@getGenerator']);
-Route::post('admin/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@postGenerator']);
+Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
+    Route::get('/', 'Admin\AdminController@index');
+    Route::resource('/roles', 'Admin\RolesController');
+    Route::resource('/permissions', 'Admin\PermissionsController');
+    Route::resource('/users', 'Admin\UsersController');
+    Route::get('/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@getGenerator']);
+    Route::post('/generator', ['uses' => '\Appzcoder\LaravelAdmin\Controllers\ProcessController@postGenerator']);
+});
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('supply/suppliers', 'Supply\\SuppliersController');
+    Route::resource('supply/supply', 'Supply\\SupplyController');
+    Route::resource('category/category', 'Products\\CategoryController');
+    Route::resource('measures', 'Products\\MeasuresController');
+    Route::resource('products', 'Products\\ProductsController');
+    Route::resource('dishes', 'Products\\DishesController');
+    Route::resource('clients', 'Orders\\ClientsController');
+    Route::resource('orders', 'Orders\\OrdersController');
+});

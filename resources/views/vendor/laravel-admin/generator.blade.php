@@ -16,7 +16,7 @@
                             <div class="form-group">
                                 <label for="crud_name" class="col-md-4 control-label">Crud Name:</label>
                                 <div class="col-md-6">
-                                    <input type="text" name="crud_name" class="form-control" id="crud_name" placeholder="Posts" required="true">
+                                    <input type="text" name="crud_name" class="form-control" id="crud_name" placeholder="Products" required="true">
                                 </div>
                             </div>
                             <div class="form-group">

@@ -43,7 +43,7 @@
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
-                        <li><a href="{{ url('/admin') }}">Dashboard <span class="sr-only">(current)</span></a></li>
+                        <li><a href="{{ url('/admin') }}">Control panel <span class="sr-only">(current)</span></a></li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -92,7 +92,7 @@
         <hr/>
 
         <div class="container">
-            &copy; {{ date('Y') }}. Created by <a href="http://www.appzcoder.com">AppzCoder</a>
+            &copy; {{ date('Y') }}. Created by <a href="https://github.com/krisNightingale/restaurant">Kristina Solovyova</a>
             <br/>
         </div>
 

@@ -26,4 +26,29 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public static function getIds()
+    {
+        $items = User::all()->all();
+        $ids = [];
+        foreach ($items as $item){
+            $ids[$item->id] = ['value' => $item->id];
+        }
+        return $ids;
+    }
+
+    public static function getNames()
+    {
+        $items = User::all()->all();
+        $names = [];
+        foreach ($items as $item){
+            $names[$item->id] = $item->name;
+        }
+        return $names;
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
