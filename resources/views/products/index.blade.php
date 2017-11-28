@@ -13,6 +13,34 @@
                             <i class="fa fa-plus" aria-hidden="true"></i> Add New
                         </a>
 
+                        {!! Form::open(['method' => 'GET', 'url' => '/products/filter', 'class' => 'navbar-form navbar-right', 'role' => 'category']) !!}
+                        <div class="input-group">
+                            {!! Form::select('category', $categoriesNames, null, [
+                                'class' => 'form-control',
+                                'value' => request('category'),
+                                'name' => 'category'], $categoriesIds) !!}
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fa fa-filter"></i>
+                                </button>
+                            </span>
+                        </div>
+                        {!! Form::close() !!}
+
+                        {!! Form::open(['method' => 'GET', 'url' => '/products/filter', 'class' => 'navbar-form navbar-right', 'role' => 'measure']) !!}
+                        <div class="input-group">
+                            {!! Form::select('measure', $measuresNames, null, [
+                                'class' => 'form-control',
+                                'value' => request('measure'),
+                                'name' => 'measure'], $measuresIds) !!}
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">
+                                    <i class="fa fa-filter"></i>
+                                </button>
+                            </span>
+                        </div>
+                        {!! Form::close() !!}
+
                         {!! Form::open(['method' => 'GET', 'url' => '/products', 'class' => 'navbar-form navbar-right', 'role' => 'search'])  !!}
                         <div class="input-group">
                             <input type="text" class="form-control" name="search" placeholder="Search..." value="{{request('search')}}">
@@ -30,7 +58,21 @@
                             <table class="table table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>ID</th><th>Name</th><th>Price</th><th>Measure</th><th>Category</th><th>Actions</th>
+                                        <th>ID
+                                            <a href="{{url('products/sort?id=asc')}}" class="fa fa-long-arrow-up" style="text-decoration: none;"></a>
+                                            <a href="{{url('products/sort?id=desc')}}" class="fa fa-long-arrow-down" style="text-decoration: none;"></a>
+                                        </th>
+                                        <th>Name
+                                            <a href="{{url('products/sort?name=asc')}}" class="fa fa-long-arrow-up" style="text-decoration: none;"></a>
+                                            <a href="{{url('products/sort?name=desc')}}" class="fa fa-long-arrow-down" style="text-decoration: none;"></a>
+                                        </th>
+                                        <th>Price
+                                            <a href="{{url('products/sort?price=asc')}}" class="fa fa-long-arrow-up" style="text-decoration: none;"></a>
+                                            <a href="{{url('products/sort?price=desc')}}" class="fa fa-long-arrow-down" style="text-decoration: none;"></a>
+                                        </th>
+                                        <th>Measure</th>
+                                        <th>Category</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>

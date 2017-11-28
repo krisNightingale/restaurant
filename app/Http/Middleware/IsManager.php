@@ -6,7 +6,7 @@ use App\Permission;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class IsAdmin
+class IsManager
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-        $permission = Permission::where('name', 'like', 'admin_permissions')->first();
+        $permission = Permission::where('name', 'like', 'manager_permissions')->first();
         if (Auth::check() && Auth::user()->hasPermission($permission))
         {
             return $next($request);

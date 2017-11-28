@@ -18,7 +18,6 @@ class CreateOrdersTable extends Migration
             $table->float('price');
             $table->integer('client_id');
             $table->integer('user_id');
-            $table->timestamps();
         });
     }
 

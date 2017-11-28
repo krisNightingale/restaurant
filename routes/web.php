@@ -17,7 +17,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', function () {
+    return view('admin.dashboard');
+});
 
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', 'Admin\AdminController@index');
@@ -29,12 +31,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 });
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::resource('supply/suppliers', 'Supply\\SuppliersController');
-    Route::resource('supply/supply', 'Supply\\SupplyController');
-    Route::resource('category/category', 'Products\\CategoryController');
-    Route::resource('measures', 'Products\\MeasuresController');
-    Route::resource('products', 'Products\\ProductsController');
-    Route::resource('dishes', 'Products\\DishesController');
+    Route::resource('supply/suppliers', 'Supply\\SuppliersController')->middleware('manager');
+    Route::get('supply/supply/sort', 'Supply\\SupplyController@sort')->middleware('manager');
+    Route::get('supply/supply/filter', 'Supply\\SupplyController@filter')->middleware('manager');
+    Route::resource('supply/supply', 'Supply\\SupplyController')->middleware('manager');
+    Route::resource('category/category', 'Products\\CategoryController')->middleware('manager');
+    Route::resource('measures', 'Products\\MeasuresController')->middleware('manager');
+    Route::get('products/sort', 'Products\\ProductsController@sort')->middleware('manager');
+    Route::get('products/filter', 'Products\\ProductsController@filter')->middleware('manager');
+    Route::resource('products', 'Products\\ProductsController')->middleware('manager');
+    Route::get('dishes/sort', 'Products\\DishesController@sort')->middleware('manager');
+    Route::get('dishes/filter', 'Products\\DishesController@filter')->middleware('manager');
+    Route::resource('dishes', 'Products\\DishesController')->middleware('manager');
     Route::resource('clients', 'Orders\\ClientsController');
+    Route::get('orders/sort', 'Orders\\OrdersController@sort');
+    Route::get('orders/filter', 'Orders\\OrdersController@filter');
     Route::resource('orders', 'Orders\\OrdersController');
 });

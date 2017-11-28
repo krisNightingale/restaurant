@@ -1,7 +1,7 @@
 {
   "menus": [
     {
-      "section": "User Manager",
+      "section": "Employee manager",
       "items": [
         {
           "title": "Users",
@@ -18,7 +18,7 @@
       ]
     },
     {
-      "section": "Modules",
+      "section": "Modules manager",
       "items": [
         {
           "title": "Suppliers",

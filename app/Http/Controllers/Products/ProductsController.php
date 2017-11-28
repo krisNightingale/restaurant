@@ -22,6 +22,11 @@ class ProductsController extends Controller
         $keyword = $request->get('search');
         $perPage = 15;
 
+        $categoriesIds = Category::getIds();
+        $categoriesNames = Category::getNames();
+        $measuresIds = Measure::getIds();
+        $measuresNames = Measure::getNames();
+
         if (!empty($keyword)) {
             $products = Product::where('name', 'LIKE', "%$keyword%")
 				->orWhere('price', 'LIKE', "%$keyword%")
@@ -32,7 +37,9 @@ class ProductsController extends Controller
             $products = Product::paginate($perPage);
         }
 
-        return view('products.index', compact('products'));
+        return view('products.index', compact('products',
+            'categoriesNames', 'categoriesIds',
+            'measuresIds', 'measuresNames'));
     }
 
     /**
@@ -140,5 +147,60 @@ class ProductsController extends Controller
         Product::destroy($id);
 
         return redirect('products')->with('flash_message', 'Product deleted!');
+    }
+
+    public function filter()
+    {
+        $category = request()->get('category');
+        $measure = request()->get('measure');
+        $perPage = 15;
+
+        $categoriesIds = Category::getIds();
+        $categoriesNames = Category::getNames();
+        $measuresIds = Measure::getIds();
+        $measuresNames = Measure::getNames();
+
+        if (!empty($category)) {
+            $products = Product::where('category_id', '=', $category)
+                ->paginate($perPage);
+        } elseif (!empty($measure)) {
+            $products = Product::where('measure_id', '=', $measure)
+                ->paginate($perPage);
+        } else {
+            $products = Product::paginate($perPage);
+        }
+
+        return view('products.index', compact('products',
+            'categoriesIds', 'categoriesNames',
+            'measuresNames', 'measuresIds'));
+    }
+
+    public function sort()
+    {
+        $id = request()->get('id');
+        $name = request()->get('name');
+        $price = request()->get('price');
+
+        $categoriesIds = Category::getIds();
+        $categoriesNames = Category::getNames();
+        $measuresIds = Measure::getIds();
+        $measuresNames = Measure::getNames();
+
+        $perPage = 15;
+
+        if (!empty($id)) {
+            $products = Product::orderBy('id', $id)->paginate($perPage);
+        } elseif (!empty($name)){
+            $products = Product::orderBy('name', $name)->paginate($perPage);
+        } elseif (!empty($price)){
+            $products = Product::orderBy('price', $price)->paginate($perPage);
+        } else {
+            $products = Product::paginate($perPage);
+        }
+
+        return view('products.index', compact('products',
+            'categoriesNames', 'categoriesIds',
+            'measuresNames', 'measuresIds'));
+
     }
 }

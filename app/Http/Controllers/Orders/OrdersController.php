@@ -22,7 +22,12 @@ class OrdersController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->get('search');
-        $perPage = 25;
+        $perPage = 15;
+
+        $usersIds = User::getIds();
+        $usersNames = User::getNames();
+        $clientsIds = Client::getIds();
+        $clientsNames = Client::getNames();
 
         if (!empty($keyword)) {
             $orders = Order::where('time', 'LIKE', "%$keyword%")
@@ -34,7 +39,9 @@ class OrdersController extends Controller
             $orders = Order::paginate($perPage);
         }
 
-        return view('orders.index', compact('orders'));
+        return view('orders.index', compact('orders',
+            'usersNames', 'usersIds',
+            'clientsNames', 'clientsIds'));
     }
 
     /**
@@ -186,5 +193,60 @@ class OrdersController extends Controller
         Order::destroy($id);
 
         return redirect('orders')->with('flash_message', 'Order deleted!');
+    }
+
+    public function filter()
+    {
+        $user = request()->get('user');
+        $client = request()->get('client');
+        $perPage = 15;
+
+        $usersIds = User::getIds();
+        $usersNames = User::getNames();
+        $clientsIds = Client::getIds();
+        $clientsNames = Client::getNames();
+
+        if (!empty($user)) {
+            $orders = Order::where('user_id', '=', $user)
+                ->paginate($perPage);
+        } elseif (!empty($client)) {
+            $orders = Order::where('client_id', '=', $client)
+                ->paginate($perPage);
+        } else {
+            $orders = Order::paginate($perPage);
+        }
+
+        return view('orders.index', compact('orders',
+            'clientsIds', 'clientsNames',
+            'usersIds', 'usersNames'));
+    }
+
+    public function sort()
+    {
+        $id = request()->get('id');
+        $time = request()->get('time');
+        $price = request()->get('price');
+
+        $usersIds = User::getIds();
+        $usersNames = User::getNames();
+        $clientsIds = Client::getIds();
+        $clientsNames = Client::getNames();
+
+        $perPage = 15;
+
+        if (!empty($id)) {
+            $orders = Order::orderBy('id', $id)->paginate($perPage);
+        } elseif (!empty($time)){
+            $orders = Order::orderBy('time', $time)->paginate($perPage);
+        } elseif (!empty($price)){
+            $orders = Order::orderBy('price', $price)->paginate($perPage);
+        } else {
+            $orders = Order::paginate($perPage);
+        }
+
+        return view('orders.index', compact('orders',
+            'clientsIds', 'clientsNames',
+            'usersIds', 'usersNames'));
+
     }
 }

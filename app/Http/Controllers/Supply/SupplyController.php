@@ -20,7 +20,10 @@ class SupplyController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->get('search');
-        $perPage = 25;
+        $perPage = 15;
+
+        $suppliersIds = Supplier::getIds();
+        $suppliersNames = Supplier::getNames();
 
         if (!empty($keyword)) {
             $supply = Supply::where('time', 'LIKE', "%$keyword%")
@@ -32,7 +35,8 @@ class SupplyController extends Controller
             $supply = Supply::paginate($perPage);
         }
 
-        return view('supply.supply.index', compact('supply'));
+        return view('supply.supply.index', compact('supply',
+            'suppliersIds', 'suppliersNames'));
     }
 
     /**
@@ -108,7 +112,9 @@ class SupplyController extends Controller
         $productsIds = Product::getIds();
         $productsNames = Product::getNames();
 
-        return view('supply.supply.edit', compact('supply', 'suppliersNames', 'suppliersIds', 'productsNames', 'productsIds'));
+        return view('supply.supply.edit', compact('supply',
+            'suppliersNames', 'suppliersIds',
+            'productsNames', 'productsIds'));
     }
 
     /**
@@ -156,5 +162,49 @@ class SupplyController extends Controller
         Supply::destroy($id);
 
         return redirect('supply/supply')->with('flash_message', 'Supply deleted!');
+    }
+
+    public function filter()
+    {
+        $supplier = request()->get('supplier');
+        $perPage = 15;
+
+        $suppliersIds = Supplier::getIds();
+        $suppliersNames = Supplier::getNames();
+
+        if (!empty($supplier)) {
+            $supply = Supply::where('supplier_id', '=', $supplier)
+                ->paginate($perPage);
+        } else {
+            $supply = Supply::paginate($perPage);
+        }
+
+        return view('supply.supply.index', compact('supply',
+            'suppliersIds', 'suppliersNames'));
+    }
+
+    public function sort()
+    {
+        $id = request()->get('id');
+        $time = request()->get('time');
+        $price = request()->get('price');
+
+        $suppliersIds = Supplier::getIds();
+        $suppliersNames = Supplier::getNames();
+
+        $perPage = 15;
+
+        if (!empty($id)) {
+            $supply = Supply::orderBy('id', $id)->paginate($perPage);
+        } elseif (!empty($time)){
+            $supply = Supply::orderBy('time', $time)->paginate($perPage);
+        } elseif (!empty($price)){
+            $supply = Supply::orderBy('price', $price)->paginate($perPage);
+        } else {
+            $supply = Supply::paginate($perPage);
+        }
+
+        return view('supply.supply.index', compact('supply',
+            'suppliersIds', 'suppliersNames'));
     }
 }

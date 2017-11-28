@@ -20,7 +20,10 @@ class DishesController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->get('search');
-        $perPage = 25;
+        $perPage = 15;
+
+        $categoriesIds = Category::getIds();
+        $categoriesNames = Category::getNames();
 
         if (!empty($keyword)) {
             $dishes = Dish::where('name', 'LIKE', "%$keyword%")
@@ -33,7 +36,7 @@ class DishesController extends Controller
             $dishes = Dish::paginate($perPage);
         }
 
-        return view('dishes.index', compact('dishes'));
+        return view('dishes.index', compact('dishes', 'categoriesNames', 'categoriesIds'));
     }
 
     /**
@@ -157,5 +160,50 @@ class DishesController extends Controller
         Dish::destroy($id);
 
         return redirect('dishes')->with('flash_message', 'Dish deleted!');
+    }
+
+    public function filter()
+    {
+        $category = request()->get('category');
+        $perPage = 15;
+
+        $categoriesIds = Category::getIds();
+        $categoriesNames = Category::getNames();
+
+        if (!empty($category)) {
+            $dishes = Dish::where('category_id', '=', $category)
+                ->paginate($perPage);
+        } else {
+            $dishes = Dish::paginate($perPage);
+        }
+
+        return view('dishes.index', compact('dishes', 'categoriesIds', 'categoriesNames'));
+    }
+
+    public function sort()
+    {
+        $id = request()->get('id');
+        $name = request()->get('name');
+        $price = request()->get('price');
+        $weight = request()->get('weight');
+
+        $categoriesIds = Category::getIds();
+        $categoriesNames = Category::getNames();
+        $perPage = 15;
+
+        if (!empty($id)) {
+            $dishes = Dish::orderBy('id', $id)->paginate($perPage);
+        } elseif (!empty($name)){
+            $dishes = Dish::orderBy('name', $name)->paginate($perPage);
+        } elseif (!empty($weight)){
+            $dishes = Dish::orderBy('weight', $weight)->paginate($perPage);
+        } elseif (!empty($price)){
+            $dishes = Dish::orderBy('price', $price)->paginate($perPage);
+        } else {
+            $dishes = Dish::paginate($perPage);
+        }
+
+        return view('dishes.index', compact('dishes', 'categoriesNames', 'categoriesIds'));
+
     }
 }
