@@ -190,7 +190,10 @@ class OrdersController extends Controller
      */
     public function destroy($id)
     {
-        Order::destroy($id);
+        $order = Order::find($id);
+        $order->products()->detach();
+        $order->dishes()->detach();
+        $order->destroy($id);
 
         return redirect('orders')->with('flash_message', 'Order deleted!');
     }

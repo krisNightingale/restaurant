@@ -159,7 +159,9 @@ class SupplyController extends Controller
      */
     public function destroy($id)
     {
-        Supply::destroy($id);
+        $supply = Supply::find($id);
+        $supply->products()->detach();
+        $supply->destroy($id);
 
         return redirect('supply/supply')->with('flash_message', 'Supply deleted!');
     }

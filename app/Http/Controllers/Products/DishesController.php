@@ -157,7 +157,9 @@ class DishesController extends Controller
      */
     public function destroy($id)
     {
-        Dish::destroy($id);
+        $dish = Dish::find($id);
+        $dish->products()->detach();
+        $dish->destroy($id);
 
         return redirect('dishes')->with('flash_message', 'Dish deleted!');
     }
